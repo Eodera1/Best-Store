@@ -1,52 +1,53 @@
-  <?php
-  include "layout/header.php";
+    <?php
+    include "layout/header.php";
 
-  // Check mif the user is logged in, if yes, then redirect him to the home page
-  if (isset($_SESSION["email"])) {
-    header("location: /index.php");
-    exit;
-  }
-
-  $email = "";
-  $error = "";
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    if (empty($email) || empty($password)) {
-      $error = "Email and password are required!";
-    }
-    else {
-      include "tools/db.php";
-      $dbConnection = getDatabaseConnection();
-
-      $statement = $dbConnection->prepare("SELECT id, first_name, last_name, phone, password, created_at FROM users WHERE email = ?");
-
-      // Bind variables to the prepared statement as parameters
-      $statement->bind_param('s', $email);
-
-      // execute statement
-      $statement->execute();
-
-      // Bind result variables
-      $statement->bind_result($id, $first_name, $last_name, $phone, $stored_password, $created_at);
-
-        // fetch values
-        if ($statement->fetch()) {
-          if (password_verify($password, $stored_password)) {
-            // Password is correct
-
-        // Store data in session variables
-      $_SEESION["id"] = $id;
-      $_SESSION["first_name"] = $first_name;
-      $_SESSION["last_name"] = $last_name;
-      $_SESSION["email"] = $email; 
-      $_SESSION["phone"] = $phone;
-      $_SESSION["created_at"] = $created_at;
-
-      // Redirect user to the home page
+    // Check mif the user is logged in, if yes, then redirect him to the home page
+    if (isset($_SESSION["email"])) {
       header("location: /index.php");
       exit;
+    }
+
+    $email = "";
+    $error = "";
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+
+      if (empty($email) || empty($password)) {
+        $error = "Email and password are required!";
+      }
+      else {
+        include "tools/db.php";
+        $dbConnection = getDatabaseConnection();
+
+        $statement = $dbConnection->prepare("SELECT id, first_name, last_name, phone, address, password, created_at FROM users WHERE email = ?");
+
+        // Bind variables to the prepared statement as parameters
+        $statement->bind_param('s', $email);
+
+        // execute statement
+        $statement->execute();
+
+        // Bind result variables
+        $statement->bind_result($id, $first_name, $last_name, $phone, $address, $stored_password, $created_at);
+
+          // fetch values
+          if ($statement->fetch()) {
+            if (password_verify($password, $stored_password)) {
+              // Password is correct
+
+          // Store data in session variables
+        $_SEESION["id"] = $id;
+        $_SESSION["first_name"] = $first_name;
+        $_SESSION["last_name"] = $last_name;
+        $_SESSION["email"] = $email; 
+        $_SESSION["phone"] = $phone;
+        $_SESSION["address"] = $address;
+        $_SESSION["created_at"] = $created_at;
+
+        // Redirect user to the home page
+        header("location: /index.php");
+        exit;
 
 
       }
@@ -68,7 +69,7 @@
 
       <?php if (!empty($error)) { ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong><?=$error ?></strong>
+          <strong><?= $error ?></strong>
           <button type="button" class="btn close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
@@ -85,6 +86,7 @@
           <label class="form-label">Password</label>
             <input class="form-control" type="password" name="password" />
           </div>
+
           <div class="row mb-3">
             <div class="col d-grid">
             <button type="submit" class="btn btn-primary">Log in</button>
