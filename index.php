@@ -12,7 +12,7 @@ include "layout/header.php";
             </p>
           </div>
           <div class="col-md-6 text centre">
-              <img src="/images/phone.png" class="img-fluid" alt="hero" />
+              <img src="/images/phone.png.jpg" class="img-fluid" alt="hero" />
           </div>
         </div>
       </div>
